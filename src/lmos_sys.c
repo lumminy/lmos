@@ -1,11 +1,4 @@
-#include "mgos_system.h"
-#include "mgos_net.h"
-#include "mgos_timers.h"
-#ifdef MGOS_HAVE_WIFI
-#include "mgos_wifi.h"
-#endif
-
-#include "lmos_sys.h"
+#include "mgos_lmos.h"
 
 #if MGOS_ENABLE_SYS_SERVICE
 void get_sys_info(lmos_callback lmos_cb, void *ud) {
@@ -63,7 +56,7 @@ void get_sys_info(lmos_callback lmos_cb, void *ud) {
 #endif
       );
 
-    char* json_str = (char*)malloc(needed * sizeof(char));
+    char json_str[needed];
 
     sprintf(json_str, json, MGOS_APP, mgos_sys_ro_vars_get_fw_version(), mgos_sys_ro_vars_get_fw_id(),
       mgos_sys_ro_vars_get_mac_address(), mgos_sys_ro_vars_get_arch(),
@@ -86,12 +79,11 @@ void get_sys_info(lmos_callback lmos_cb, void *ud) {
   free(ssid);
   free(status);
 #endif
-      free(json_str);
       (void)ud;
       (void)lmos_cb;
 }
 #endif
 
-bool mgos_lmos_init(void) { 
-      return true; 
+bool mgos_lmos_init(void) {
+      return true;
 }
