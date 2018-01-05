@@ -1,21 +1,14 @@
 #include "mgos_system.h"
-#include "mgos_mongoose.h"
 #include "mgos_net.h"
-#include "mgos_sys_config.h"
 #include "mgos_timers.h"
-#include "mgos_utils.h"
 #ifdef MGOS_HAVE_WIFI
 #include "mgos_wifi.h"
 #endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 #include "lmos_sys.h"
 
 #if MGOS_ENABLE_SYS_SERVICE
-char* get_sys_info(void) {
+void get_sys_info(lmos_callback lmos_cb, void *ud) {
           struct mgos_net_ip_info ip_info;
   memset(&ip_info, 0, sizeof(ip_info));
 #ifdef MGOS_HAVE_WIFI
@@ -40,6 +33,7 @@ char* get_sys_info(void) {
     mgos_net_ip_to_str(&ip_info.ip, eth_ip);
   }
 #endif
+  (void) ip_info;
 
     //JSON struct
     char* json = "{app: \"%s\", fw_version: \"%s\", fw_id: \"%s\", mac: \"%s\", "
@@ -86,19 +80,15 @@ char* get_sys_info(void) {
 #endif
       );
 
+      (*lmos_cb)(json_str, ud);
+
 #ifdef MGOS_HAVE_WIFI
   free(ssid);
   free(status);
 #endif
-    return json_str;
-}
-
-void reboot(int delay) {
-      int delay_ms = 100;
-      if(delay >= 0){
-            delay_ms = delay;
-      }
-      mgos_system_restart_after(delay_ms);
+      free(json_str);
+      (void)ud;
+      (void)lmos_cb;
 }
 #endif
 
