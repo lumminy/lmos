@@ -1,4 +1,4 @@
-author: lumminy
+author: lucca-os
 description: Implements Direct Methods
 type: lib
 version: 1.0
@@ -9,9 +9,10 @@ libs:
 
 sources:
   - src
-
 includes:
   - include
+filesystem:
+  - fs
 
 tags:
   - sys
